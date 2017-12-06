@@ -1,0 +1,17 @@
+{% extends 'defaults/base.html' %}
+
+{% block head_title %}Courses | {{ block.super }}{% endblock head_title %}
+{% block content %}
+<div class='row'>
+	<div class='col-12 col-md-6 mx-auto'>
+		<li class='lead'>{{ object.title }} | {{ object.timestamp }}</li>
+		{{ object.description }}
+		<hr/>
+		{% for l in object.lecture_set.all %}
+		<p>{{ l.order }}<a href='{{ l.get_absolute_url }}'>{{ l.title }}</a></p>
+		{% empty %}
+		<P>No Lectures Found.</P>
+		{% endfor %}
+	</div>
+</div>
+{% endblock content %}

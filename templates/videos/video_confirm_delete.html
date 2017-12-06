@@ -1,0 +1,14 @@
+{% extends 'defaults/base.html' %}
+
+{% block head_title %}Videos | {{ block.super }}{% endblock head_title %}
+{% block content %}
+<div class='row'>
+	<div class='col-12 col-md-6 mx-auto'>
+		<form class='form' method='POST' action='.'>{% csrf_token %}
+			<p>Are you sure you want to delete<b>{{ object.title }}</b></p>
+			<input type='submit' class='byn btn-primary' value='Delete'>
+			<a class='btn btn-link' href='{{ object.get_absolute_url }}'>Cancel</a>
+		</form>
+	</div>
+</div>
+{% endblock content %}

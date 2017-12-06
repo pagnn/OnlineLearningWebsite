@@ -1,0 +1,11 @@
+{% extends 'defaults/base.html' %}
+
+{% block head_title %}Videos | {{ block.super }}{% endblock head_title %}
+{% block content %}
+<div class='row'>
+	<div class='col-12 col-md-6 mx-auto'>
+		<li class='lead'>{{ object.title }} | {{ object.timestamp }}</li>
+		{{ object.embed_code }}
+	</div>
+</div>
+{% endblock content %}

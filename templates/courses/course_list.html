@@ -1,0 +1,25 @@
+{% extends 'defaults/base.html' %}
+
+{% block head_title %}Courses | {{ block.super }}{% endblock head_title %}
+{% block content %}
+<div class='row'>
+	<div class='col-sm-6 col-sm-offset-3 mx-auto my-3'>
+		{% include 'courses/snippets/course-search.html' with request=request %}
+		<hr/>
+		{% if request.GET.q %}
+		<h2>You are searching for {{ request.GET.q }}</h2>
+		{% endif %}
+	</div>
+</div>
+<div class='row'>
+	<div class='col-sm-6 col-sm-offset-3 mx-auto'>
+
+		{% for object in object_list %}
+			<li class='lead'><a href="{{ object.get_absolute_url }}">{{ object.title }}</a> | {{ object.lecture_set.count }} Lectures | {% if object.is_owner %}Owned{% else %}{{ object.display_price }}<a href='{{ object.get_purchase_url }}'>Purchase</a>{% endif %}</li>
+			
+		{% empty %}
+			<h2>No Item found</h2>
+		{% endfor %}
+	</div>
+</div>
+{% endblock content %}
