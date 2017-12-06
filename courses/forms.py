@@ -1,5 +1,5 @@
 from django import forms
-
+from django.db.models import Q
 from .models import Course,Lecture
 from videos.models import Video
 
@@ -16,7 +16,7 @@ class LectureAdminForm(forms.ModelForm):
 	def __init__(self,*args,**kwargs):
 		super(LectureAdminForm,self).__init__(*args,**kwargs)
 		obj=kwargs.get('instance')
-		qs=Video.objects.filter(lecture__isnull=True)
+		qs=Video.objects.all().unused()
 		if obj:
 			if obj.video:
 				this_=Video.objects.filter(pk=obj.video.pk)

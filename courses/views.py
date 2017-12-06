@@ -33,8 +33,7 @@ class CoursePurchaseView(LoginRequiredMixin,RedirectView):
 	permanent=False
 	def get_redirect_url(self,slug=None):
 		request=self.request
-		qs=Course.objects.filter(slug=slug) #.owned(request.user)
-		print(qs)
+		qs=Course.objects.filter(slug=slug).owned(request.user)
 		if qs.exists():
 			if request.user.is_authenticated():
 				my_courses=MyCourses.objects.get(user=request.user)

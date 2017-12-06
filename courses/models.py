@@ -11,7 +11,7 @@ from django.db.models import Prefetch
 from videos.models import Video
 from .fields import PositionField
 from srvup.utils import make_display_price
-
+from categories.models import Category
 
 
 class MyCourses(models.Model):
@@ -33,11 +33,6 @@ def post_save_user_receiver(sender,instance,created,*args,**kwargs):
 
 post_save.connect(post_save_user_receiver,sender=settings.AUTH_USER_MODEL)
 
-POS_CHOICES=(
-	('main','Main'),
-	('sec','Secondary'),
-	)
-
 
 class CourseQuerySet(models.query.QuerySet):
 	def active(self):
@@ -58,7 +53,8 @@ class CourseManager(models.Manager):
 class Course(models.Model):
 	user        =models.ForeignKey(settings.AUTH_USER_MODEL)
 	title     	=models.CharField(max_length=120)
-	category    =models.CharField(max_length=120,choices=POS_CHOICES,default='main')
+	category    =models.ForeignKey(Category,related_name='primary_category',null=True,blank=True)
+	secondary   =models.ManyToManyField(Category,related_name='secondary_category',blank=True)
 	order       =PositionField(collection='category')
 	slug        =models.SlugField(blank=True)
 	description =models.CharField(max_length=120)

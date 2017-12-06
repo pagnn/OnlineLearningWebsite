@@ -1,11 +1,11 @@
 {% extends 'defaults/base.html' %}
-
+{% load render_video %}
 {% block head_title %}Lectures | {{ block.super }}{% endblock head_title %}
 {% block content %}
 <div class='row'>
 	<div class='col-12 col-md-6 mx-auto'>
 		<li class='lead'>{{ object.title }} | {{ object.timestamp }}</li>
-		{{ object.video.embed_code|safe }}
+		{% render_video object.video %}
 	</div>
 </div>
 {% endblock content %}
