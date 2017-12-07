@@ -1,0 +1,30 @@
+{% extends 'defaults/base.html' %}
+{% block head_title %}Search | {{ block.super }}{% endblock head_title %}
+{% block content %}
+
+<div class='row'>
+	<div class='col-12'>
+		<h1>Results</h1>
+		<hr/>
+	</div>
+</div>
+<div class='row'>
+	<div class='col-12 mx-auto'>
+		{% for object in c_qs %}
+		<a href="{{ object.get_absolute_url }}">{{ object.title }}</a>
+		<hr/>
+{% empty %}
+		{% endfor %}
+	</div>
+		
+</div>
+<div class='row'>
+	{% for object in qs %}
+	<div class='col-12 col-md-6 col-lg-4 mx-auto'>
+		{% include 'courses/snippets/course-thumbnail-display.html' with object=object %}
+	</div>
+		{% empty %}
+			<p class='lead'>No Item found</p>
+		{% endfor %}
+</div>
+{% endblock %}

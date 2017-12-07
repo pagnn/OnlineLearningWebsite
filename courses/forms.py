@@ -12,7 +12,7 @@ class CourseForm(forms.ModelForm):
 class LectureAdminForm(forms.ModelForm):
 	class Meta:
 		model=Lecture
-		fields=['order','title','video','description','slug']
+		fields=['order','title','free','video','description','slug']
 	def __init__(self,*args,**kwargs):
 		super(LectureAdminForm,self).__init__(*args,**kwargs)
 		obj=kwargs.get('instance')

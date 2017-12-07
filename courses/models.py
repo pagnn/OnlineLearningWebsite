@@ -37,11 +37,19 @@ post_save.connect(post_save_user_receiver,sender=settings.AUTH_USER_MODEL)
 class CourseQuerySet(models.query.QuerySet):
 	def active(self):
 		return self.filter(active=True)
+	def lectures(self):
+		return self.prefetch_related('lecture_set')
 	def owned(self,user):
+		if user.is_authenticated():
+			qs=MyCourses.objects.filter(user=user)
+		else:
+			qs=MyCourses.objects.none()
 		return self.prefetch_related(Prefetch('owned',
-										queryset=MyCourses.objects.filter(user=user),
+										queryset=qs,
 										to_attr='is_owner'
 				))
+	def featured(self):
+		return self.filter(category__title__icontains='featured')
 class CourseManager(models.Manager):
 	def get_queryset(self):
 		return CourseQuerySet(self.model,using=self._db)
@@ -49,10 +57,20 @@ class CourseManager(models.Manager):
 		return self.get_queryset().all().active()
 	def owned(self,user):
 		return self.get_queryset().owned(self,user)
-
+	def lectures(self):
+		return self.get_queryset().lectures()
+	def featured(self):
+		return self.get_queryset().featured()
+def handle_upload(instance,filename):
+	if instance.slug:
+		return "%s/images/%s"%(instance.slug,filename)
+	return "unknown/images/%s"%(filename)
 class Course(models.Model):
 	user        =models.ForeignKey(settings.AUTH_USER_MODEL)
 	title     	=models.CharField(max_length=120)
+	image       =models.ImageField(upload_to=handle_upload,height_field='image_height',width_field='image_width',blank=True,null=True)
+	image_height = models.IntegerField(null=True,blank=True)
+	image_width = models.IntegerField(null=True,blank=True)
 	category    =models.ForeignKey(Category,related_name='primary_category',null=True,blank=True)
 	secondary   =models.ManyToManyField(Category,related_name='secondary_category',blank=True)
 	order       =PositionField(collection='category')
@@ -79,6 +97,11 @@ def pre_save_course_receiver(sender,instance,*args,**kwargs):
 		instance.slug=unique_slug_generator(instance)
 pre_save.connect(pre_save_course_receiver,sender=Course)
 
+def post_save_course_receiver(sender,instance,created,*args,**kwargs):
+	if not instance.category in instance.secondary.all():
+		instance.secondary.add(instance.category)
+post_save.connect(post_save_course_receiver,sender=Course)
+
 #foreign key limit_choices_to={'lecture__isnull':False,'title__icontains':'something'}
 class Lecture(models.Model):
 	course 		=models.ForeignKey(Course,on_delete=models.SET_NULL,null=True)
@@ -86,6 +109,7 @@ class Lecture(models.Model):
 	title     	=models.CharField(max_length=120)
 	order       =PositionField(collection='course')
 	slug        =models.SlugField(blank=True)
+	free        = models.BooleanField(default=False)
 	description =models.CharField(max_length=120,blank=True)
 	timestamp   =models.DateTimeField(auto_now_add=True)
 	updated     =models.DateTimeField(auto_now=True)

@@ -3,11 +3,18 @@
 {% block head_title %}Categories | {{ block.super }}{% endblock head_title %}
 {% block content %}
 <div class='row'>
-	<div class='col-12 col-md-6 col-md-offset-3 mx-auto'>
-	<h1>{{ object.title }}</h1>
+	<div class='col-12 mx-auto'>
+	<h1>{{ object.title }} | {{ object.courses_length }} Courses</h1>
 	<hr/>
-	{% render_video object.video %}
-
 </div>
+</div>
+<div class='row'>
+	{% for object in courses %}
+	<div class='col-sm-4'>
+		{% include 'courses/snippets/course-thumbnail-display.html' with object=object %}
+	</div>
+		{% empty %}
+			<p class='lead'>No Item found</p>
+		{% endfor %}
 </div>
 {% endblock content %}

@@ -1,0 +1,13 @@
+<div class='thumbnail'>
+	<a href="{{ object.get_absolute_url }}"><img src="{{ object.image.url }}" class="img-fluid" ></a>
+	<div class='caption'>
+		<h3>{{ object.title }}| {{ object.lecture_set.count }} Lectures</h3>
+		{% if object.description %}
+		<p>{{ object.description|truncatechars:100 }}</p>
+		{% endif %}
+		<p class='lead'>{% if object.is_owner %}Owned{% else %}Price {{ object.display_price }}{% endif %}</p>
+		<p><a href="{{ object.get_absolute_url }}" class='btn btn-primary'>View</a>
+		{% if not object.is_owner %}<a class='btn btn-warning' href='{{ object.get_purchase_url }}'>Purchase</a>{% endif %}</p>
+
+	</div>
+</div>

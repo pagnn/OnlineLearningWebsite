@@ -2,24 +2,40 @@
 
 {% block head_title %}Courses | {{ block.super }}{% endblock head_title %}
 {% block content %}
-<div class='row'>
-	<div class='col-sm-6 col-sm-offset-3 mx-auto my-3'>
-		{% include 'courses/snippets/course-search.html' with request=request %}
-		<hr/>
-		{% if request.GET.q %}
-		<h2>You are searching for {{ request.GET.q }}</h2>
-		{% endif %}
-	</div>
-</div>
-<div class='row'>
-	<div class='col-sm-6 col-sm-offset-3 mx-auto'>
 
-		{% for object in object_list %}
-			<li class='lead'><a href="{{ object.get_absolute_url }}">{{ object.title }}</a> | {{ object.lecture_set.count }} Lectures | {% if object.is_owner %}Owned{% else %}{{ object.display_price }}<a href='{{ object.get_purchase_url }}'>Purchase</a>{% endif %}</li>
-			
+<div class='row my-3'>
+	{% for object in object_list %}
+	<div class='col-12 col-md-6 col-lg-4 mx-auto'>
+		{% include 'courses/snippets/course-thumbnail-display.html' with object=object %}
+	</div>
 		{% empty %}
-			<h2>No Item found</h2>
+			<p class='lead'>No Item found</p>
 		{% endfor %}
+</div>
+<div class='row my-3'>
+	<div class='col-12  '>
+<nav aria-label="Page navigation mx-auto">
+  <ul class="pagination">			
+	{% if is_paginated %}
+	{% if page_obj.has_previous %}
+    <li class="page-item"><a class="page-link" href='{% url "courses:list" %}?page=1'>First Page</a></li>
+    <li class="page-item"><a class="page-link" href='{% url "courses:list" %}?page={{ page_obj.previous_page_number }}' aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </a></li>
+	{% endif %}
+	 
+	<li class="page-item"><a class="page-link" href='{% url "courses:list" %}?page={{ page_obj.number }}'>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</a></li>
+	{% if page_obj.has_next %}
+    <li class="page-item"><a class="page-link" href='{% url "courses:list" %}?page={{ page_obj.next_page_number }}' aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a></li>
+    <li class="page-item"><a class="page-link" href='{% url "courses:list" %}?page={{ page_obj.paginator.num_pages }}'>Last Page</a></li>
+	{% endif %}	
+	{% endif %}
+	</ul>
+</nav>
 	</div>
 </div>
 {% endblock content %}

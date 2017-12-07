@@ -1,0 +1,32 @@
+{% extends 'defaults/base.html' %}
+
+{% block head_title %}Courses | {{ block.super }}{% endblock head_title %}
+{% block content %}
+
+<div class='row'>
+	<div class='col-12 col-md-6 mx-auto'>
+		<div class="p-3 mb-2 bg-warning text-white"><a class='btn btn-warning' href='{{ course.get_purchase_url }}'>Please Purchase to Continue</a></div>
+	</div>
+</div>
+<div class='row'>
+	<div class='col-12 col-md-6 mx-auto'>
+		<li class='lead'>{{ course.title }} | {{ course.timestamp }}</li>
+		<img src="{{ course.image.url }}" class="img-fluid my-3" >
+		<p>{{ course.description }}</p>
+		<hr/>
+	</div>
+</div>
+<div class='row'>
+	<div class='col-12 col-md-6 mx-auto'>
+		{% for l in course.lecture_set.all %}
+		<div class="list-group">
+  			<a href='{{ l.get_absolute_url }}' class="list-group-item list-group-item-action lead" disabled='disabled'>
+    			{{ l.title }} <small>{% if l.free %}| Free Preview{% endif %}</small>
+ 			</a>
+		</div>
+		{% empty %}
+		<p class='lead'>Lecture is coming soon.</p>
+		{% endfor %}
+	</div>
+</div>
+{% endblock content %}

@@ -6,8 +6,13 @@ class MemberRequiredMixin(object):
 	def dispatch(self,request,*args,**kwargs):
 		obj=self.get_object()
 		user=request.user
-		if obj.free or user.is_staff:
+		if user.is_staff:
 			return super(MemberRequiredMixin,self).dispatch(request,*args,**kwargs)
+		try:
+			if obj.free:
+				return super(MemberRequiredMixin,self).dispatch(request,*args,**kwargs)
+		except:
+			pass		
 		return HttpResponse('Oops...not free')
 class StaffMemberRequiredMxin(object):
 	@method_decorator(staff_member_required)

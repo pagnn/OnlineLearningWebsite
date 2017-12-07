@@ -2,6 +2,12 @@
 {% load render_video %}
 {% block head_title %}Lectures | {{ block.super }}{% endblock head_title %}
 {% block content %}
+<ol class='breadcrumb'>
+	<li><a href="{% url 'home' %}">Home</a></li> /
+	<li><a href="{{ object.course.get_absolute_url }}"> {{ object.course.title }} </a></li> /
+	<li>{{ object.title }}</li>
+</ol>
+
 <div class='row'>
 	<div class='col-12 col-md-6 mx-auto'>
 		<li class='lead'>{{ object.title }} | {{ object.timestamp }}</li>
