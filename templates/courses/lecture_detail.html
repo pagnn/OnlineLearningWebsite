@@ -1,5 +1,6 @@
 {% extends 'defaults/base.html' %}
 {% load render_video %}
+{% load load_comments %}
 {% block head_title %}Lectures | {{ block.super }}{% endblock head_title %}
 {% block content %}
 <ol class='breadcrumb'>
@@ -8,10 +9,15 @@
 	<li>{{ object.title }}</li>
 </ol>
 
-<div class='row'>
+<div class='row my-3'>
 	<div class='col-12 col-md-6 mx-auto'>
 		<li class='lead'>{{ object.title }} | {{ object.timestamp }}</li>
 		{% render_video object.video %}
+	</div>
+</div>
+<div class='row'>
+	<div class='col-12 col-md-6 mx-auto'>
+		<div class='load-comments' data-url='{{ request.build_absolute_uri }}'></div>
 	</div>
 </div>
 {% endblock content %}

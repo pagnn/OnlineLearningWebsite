@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'^courses/', include('courses.urls',namespace='courses')),
     url(r'^categories/', include('categories.urls',namespace='categories')),
     url(r'^search/', include('search.urls',namespace='search')),
+    url(r'^api/comments/', include('comments.api.urls',namespace='api-comments')),
 ]
 
 
